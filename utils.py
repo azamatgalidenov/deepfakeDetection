@@ -7,9 +7,20 @@ import os
 import json
 import tensorflow as tf
 import numpy as np
+import pandas as pd
 
 
 class Plotter:
+    def read_json(self, json_file_path):
+        """
+        Loading the json file
+        """
+
+        with open(json_file_path, "r") as f:
+            contents = json.load(f)
+
+        return contents
+    
     def plot_confusion_matrix(self, y_true, y_pred, classes=None, title=None, normalize=None, path=None):
         """
         Plots confusion matrix.
@@ -70,6 +81,37 @@ class Plotter:
 
         # save fig
         plt.savefig(path)
+    
+    def plot_dataset_distribution(self, dataset_path, save_path):
+        metadata_path = '/home/mp30265/deepfake_detection/data/train_sample_videos/metadata.json'
+        metadata = self.read_json(metadata_path)
+
+        fake_count = 0
+        real_count = 0
+
+        for video_folder in os.listdir(os.path.join(dataset_path, 'test')):
+            augmented_folder_path = os.path.join(dataset_path, 'test', video_folder)
+            if metadata[video_folder + '.mp4']['label'] == 'FAKE':
+                fake_count += len(os.listdir(augmented_folder_path))
+            else:
+                real_count += len(os.listdir(augmented_folder_path))
+        counts = {'REAL':real_count, 'FAKE':fake_count}
+        counts = pd.Series(counts)
+
+        plt.figure(figsize=(15, 7))
+        bars = counts.plot(kind='bar', color=['skyblue', 'salmon'])
+
+        plt.xlabel('Image Condition')
+        plt.ylabel('Frequency')
+        plt.title('Face Condition Frequency')
+        plt.xticks(rotation=45)
+
+        for bar in bars.patches:
+            plt.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'{int(bar.get_height())}',
+                    ha='center', va='bottom')
+
+        plt.tight_layout()
+        plt.savefig(save_path)
 
 
 class Preprocessor:
@@ -103,23 +145,39 @@ class Preprocessor:
                 img_path = os.path.join(augmented_folder_path, img_file)
                 preprocessed_train_images.append(self.preprocess_image(img_path))
                 train_labels.append(label)
-
+        #encoded = train_labels
         train_labels = tf.keras.utils.to_categorical(train_labels, num_classes=2)
-        
-        """
-        # Preprocess test images
-        preprocessed_test_images = []
-        for video_folder in os.listdir(os.path.join(path, 'test')):
-            augmented_folder_path = os.path.join(path, 'test', video_folder)
-            for img_file in os.listdir(augmented_folder_path):
-                img_path = os.path.join(augmented_folder_path, img_file)
-                preprocessed_test_images.append(preprocess_image(img_path))
-        """
+    
 
         train_images = np.array(preprocessed_train_images)
         train_labels = np.array(train_labels)
+        #encoded = np.array(encoded)
 
 
         x_train, x_val, y_train, y_val = train_test_split(train_images, train_labels, test_size=0.2, shuffle=True, random_state=42)
+        
         return x_train, x_val, y_train, y_val
     
+    def get_test_data(self, path):
+
+        metadata_path = '/home/mp30265/deepfake_detection/data/train_sample_videos/metadata.json'
+        metadata = self.read_json(metadata_path)
+
+        preprocessed_test_images = []
+        test_labels = []
+        for video_folder in os.listdir(os.path.join(path, 'test')):
+            augmented_folder_path = os.path.join(path, 'test', video_folder)
+            label = 1 if metadata[video_folder + '.mp4']['label'] == 'FAKE' else 0
+            for img_file in os.listdir(augmented_folder_path):
+                img_path = os.path.join(augmented_folder_path, img_file)
+                preprocessed_test_images.append(self.preprocess_image(img_path))
+                test_labels.append(label)
+
+        test_images = np.array(preprocessed_test_images)
+        test_labels = np.array(test_labels)
+
+        print(test_labels)
+
+        return test_images, test_labels
+    
+
