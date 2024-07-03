@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Deepfake Detection</h1>
+        <div class="video-selection-section">
+            <h2>Select a Video</h2>
+            <select id="videoSelect"></select>
+            <button id="loadVideoButton">Load Video</button>
+        </div>
+        <div class="peek-section">
+            <h2>Peek Video</h2>
+            <video id="videoPreview" controls></video>
+            <button id="processButton">Process Video</button>
+        </div>
+        <div id="result">
+            <h2>Result: <span id="resultText">No video processed yet</span></h2>
+        </div>
+        <div id="spinner" class="spinner" style="display: none;"></div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
