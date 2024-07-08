@@ -42,7 +42,7 @@ We utilized the VGG16 architecture, a deep convolutional network known for its h
 
 
 ## Training
-The model was trained using a split of 70% training and 30% validation data. The performance of the model improved significantly after tuning hyperparameters.
+The model was trained using a split of 80% training, 10% testing and 10% validation data. The performance of the model improved significantly after tuning hyperparameters.
 
 ## Results
 The final model achieved an accuracy of over 92% on the validation set. The confusion matrix from the model testing shows high precision and recall rates.
