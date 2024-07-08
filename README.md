@@ -1,7 +1,7 @@
 # Deepfake Detection Project
 
 ## Overview
-This project focuses on the detection of deepfake videos using machine learning. Deepfakes are sophisticated AI-generated videos that superimpose one person's likeness over another, creating convincing video content that appears real. Our goal is to develop a system that can accurately distinguish between genuine and artificially manipulated videos to prevent the spread of misinformation.
+This project focuses on the detection of deepfake videos using Deep Learning. Deepfakes are sophisticated AI-generated videos that superimpose one person's likeness over another, creating convincing video content that appears real. Our goal is to develop a system that can accurately distinguish between genuine and artificially manipulated videos to prevent the spread of misinformation.
 ![image](https://github.com/kazanova777/deepfakedetection/assets/117648953/078e7a80-1a9f-4e51-a038-b1c778b5583e)
 
 ## Team Members
